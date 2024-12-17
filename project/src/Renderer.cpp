@@ -60,6 +60,9 @@ namespace dae {
 			m_pRenderTargetView->Release();
 			m_pRenderTargetView = nullptr;
 		}
+
+		m_pMesh = nullptr;
+		delete m_pMesh;
 	}
 
 	void Renderer::Update(const Timer* pTimer)
@@ -79,6 +82,7 @@ namespace dae {
 		m_pDeviceContext->ClearDepthStencilView(m_pDepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
 		// 2. SET pipeline + invoke draw call (= render)
+		m_pMesh->Render(m_pDeviceContext);
 
 		// 3. Present backbuffer (swap)
 		m_pSwapChain->Present(0, 0);

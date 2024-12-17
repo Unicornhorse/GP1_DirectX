@@ -1,5 +1,6 @@
+#pragma once
+#include "pch.h"
 #include "Effect.h"
-
 
 Effect::Effect(ID3D11Device* pDevice, const std::wstring& assetFile)
 {
@@ -19,7 +20,7 @@ Effect::~Effect()
 	m_pTechnique = nullptr;
 }
 
-static ID3DX11Effect* LoadEffect(ID3D11Device* pDevice, const std::wstring& assetFile)
+ID3DX11Effect* Effect::LoadEffect(ID3D11Device* pDevice, const std::wstring& assetFile)
 {
 	HRESULT result;
 	ID3D10Blob* pErrorBlob{nullptr};
@@ -66,6 +67,16 @@ static ID3DX11Effect* LoadEffect(ID3D11Device* pDevice, const std::wstring& asse
 		}
 	}
 	return pEffect;
+}
+
+ID3DX11EffectTechnique* Effect::GetTechnique() const
+{
+	return m_pTechnique;
+}
+
+ID3D11InputLayout* Effect::GetInputLayout() const
+{
+	return m_pInputLayout;
 }
 
 

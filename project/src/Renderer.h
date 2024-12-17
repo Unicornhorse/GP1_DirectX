@@ -1,4 +1,5 @@
 #pragma once
+#include "Mesh.h"
 
 struct SDL_Window;
 struct SDL_Surface;
@@ -39,5 +40,7 @@ namespace dae
 
 		ID3D11Texture2D* m_pRenderBackBuffer{};
 		ID3D11RenderTargetView* m_pRenderTargetView{};
+
+		Mesh* m_pMesh{};
 	};
 }
