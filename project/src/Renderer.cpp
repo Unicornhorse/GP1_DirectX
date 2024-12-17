@@ -27,31 +27,38 @@ namespace dae {
 			m_pDeviceContext->ClearState();
 			m_pDeviceContext->Flush();
 			m_pDeviceContext->Release();
+			m_pDeviceContext = nullptr;
 		}
 		
 
 		if (m_pDevice) {
 			m_pDevice->Release();
+			m_pDevice = nullptr;
 		}
 
 		if (m_pSwapChain) {
 			m_pSwapChain->Release();
+			m_pSwapChain = nullptr;
 		}
 
 		if (m_pDepthStencilBuffer) {
 			m_pDepthStencilBuffer->Release();
+			m_pDepthStencilBuffer = nullptr;
 		}
 
 		if (m_pDepthStencilView) {
 			m_pDepthStencilView->Release();
+			m_pDepthStencilView = nullptr;
 		}
 
 		if (m_pRenderBackBuffer) {
 			m_pRenderBackBuffer->Release();
+			m_pRenderBackBuffer = nullptr;
 		}
 
 		if (m_pRenderTargetView) {
 			m_pRenderTargetView->Release();
+			m_pRenderTargetView = nullptr;
 		}
 	}
 
