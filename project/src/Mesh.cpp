@@ -1,12 +1,18 @@
 #include "pch.h"
 #include "Mesh.h"
 
-Mesh::Mesh(ID3D11Device* pDevice, const std::vector<Vertex_PosCol>& vertices, const std::vector<uint32_t>& indices)
-{
-	m_pEffect = new Effect{ pDevice, L"PosCol3D.fx" };
-	m_pTechnique = m_pEffect->GetTechnique();
+Mesh::Mesh(ID3D11Device* pDevice) :
+	m_Indices{ 0, 1, 2 },
+	m_Vertices{
+		{{.0f, .5f, .5f}, {1.f, 0.f, 0.f}},
+		{{.5f, -.5f, .5f}, {0.f, 0.f, 1.f}},
+		{{-.5f, -.5f, .5f}, {0.f, 1.f, 0.f}}
+	},
+	m_pEffect{ new Effect( pDevice, L"resources/PosCol3D.fx" ) },
+	m_pTechnique{ m_pEffect->GetTechnique() }
 
-	CreateLayoutAndBuffers(pDevice, vertices, indices);
+{
+	CreateLayoutAndBuffers(pDevice, m_Vertices, m_Indices);
 }
 
 Mesh::~Mesh()
@@ -39,7 +45,8 @@ void Mesh::Render(ID3D11DeviceContext* pDeviceContext) const
 	pDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	// 2. Set Input Layout
-	pDeviceContext->IASetInputLayout(m_pEffect->GetInputLayout());
+	//pDeviceContext->IASetInputLayout(m_pEffect->GetInputLayout());
+	pDeviceContext->IASetInputLayout(m_pInputLayout);
 
 	// 3. Set VertexBuffer
 	constexpr UINT stride = sizeof(Vertex_PosCol);
@@ -60,6 +67,12 @@ void Mesh::Render(ID3D11DeviceContext* pDeviceContext) const
 
 void Mesh::CreateLayoutAndBuffers(ID3D11Device* pDevice, const std::vector<Vertex_PosCol>& vertices, const std::vector<uint32_t>& indices)
 {
+	CreateVertexLayout(pDevice);
+	CreateVertexBuffer(pDevice, vertices, indices);
+}
+
+void Mesh::CreateVertexLayout(ID3D11Device* pDevice)
+{
 	// Create Vertex Layout
 	static constexpr uint32_t numElements{ 2 };
 	D3D11_INPUT_ELEMENT_DESC vertexDesc[numElements]{};
@@ -67,17 +80,33 @@ void Mesh::CreateLayoutAndBuffers(ID3D11Device* pDevice, const std::vector<Verte
 	vertexDesc[0].SemanticName = "POSITION";
 	vertexDesc[0].Format = DXGI_FORMAT_R32G32B32_FLOAT;
 	vertexDesc[0].AlignedByteOffset = 0;
-	vertexDesc[0].InputSlotClass = D3D11_INPUT_PER_INSTANCE_DATA;
+	vertexDesc[0].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
 
 	vertexDesc[1].SemanticName = "COLOR";
-	vertexDesc[1].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+	vertexDesc[1].Format = DXGI_FORMAT_R32G32B32_FLOAT;
 	vertexDesc[1].AlignedByteOffset = 12;
-	vertexDesc[1].InputSlotClass = D3D11_INPUT_PER_INSTANCE_DATA;
+	vertexDesc[1].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
 
+	// Create Input Layout
+	D3DX11_PASS_DESC passDesc{};
+	m_pTechnique->GetPassByIndex(0)->GetDesc(&passDesc);
+
+	const HRESULT result = pDevice->CreateInputLayout(
+		vertexDesc,
+		numElements,
+		passDesc.pIAInputSignature,
+		passDesc.IAInputSignatureSize,
+		&m_pInputLayout);
+
+	if (FAILED(result))
+		return;
+}
+void Mesh::CreateVertexBuffer(ID3D11Device* pDevice, const std::vector<Vertex_PosCol>& vertices, const std::vector<uint32_t>& indices)
+{
 	// Create Vertex Buffer
-	D3D11_BUFFER_DESC bd{};
+	D3D11_BUFFER_DESC bd = {};
 	bd.Usage = D3D11_USAGE_IMMUTABLE;
-	bd.ByteWidth = sizeof(Vertex_PosCol) * uint32_t(vertices.size());
+	bd.ByteWidth = sizeof(Vertex_PosCol) * static_cast<uint32_t>(vertices.size());
 	bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	bd.CPUAccessFlags = 0;
 	bd.MiscFlags = 0;
@@ -89,20 +118,6 @@ void Mesh::CreateLayoutAndBuffers(ID3D11Device* pDevice, const std::vector<Verte
 	if (FAILED(result))
 		return;
 
-	// Create Input Layout
-	D3DX11_PASS_DESC passDesc{};
-	m_pTechnique->GetPassByIndex(0)->GetDesc(&passDesc);
-
-	result = pDevice->CreateInputLayout(
-		vertexDesc,
-		numElements,
-		passDesc.pIAInputSignature,
-		passDesc.IAInputSignatureSize,
-		&m_pInputLayout);
-
-	if (FAILED(result))
-		return;
-
 	// Create Index Buffer
 	m_NumIndices = static_cast<uint32_t>(indices.size());
 	bd.Usage = D3D11_USAGE_IMMUTABLE;
@@ -111,7 +126,7 @@ void Mesh::CreateLayoutAndBuffers(ID3D11Device* pDevice, const std::vector<Verte
 	bd.CPUAccessFlags = 0;
 	bd.MiscFlags = 0;
 
-	initData.pSysMem = vertices.data();
+	initData.pSysMem = indices.data();
 	result = pDevice->CreateBuffer(&bd, &initData, &m_pIndexBuffer);
 	if (FAILED(result))
 		return;

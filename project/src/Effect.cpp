@@ -2,10 +2,12 @@
 #include "pch.h"
 #include "Effect.h"
 
-Effect::Effect(ID3D11Device* pDevice, const std::wstring& assetFile)
+Effect::Effect(ID3D11Device* pDevice, const std::wstring& assetFile) :
+	m_pEffect{ LoadEffect(pDevice, assetFile) },
+	m_pTechnique{ nullptr }
 {
-	m_pEffect = LoadEffect(pDevice, assetFile);
-	m_pTechnique = m_pEffect->GetTechniqueByName("DefaultTechnique");
+	//m_pTechnique = m_pEffect->GetTechniqueByIndex(0);
+    m_pTechnique = m_pEffect->GetTechniqueByName("DefaultTechnique");
 	if (!m_pTechnique) {
 		std::wcout << L"Technique not valid\n";
 	}
@@ -13,15 +15,26 @@ Effect::Effect(ID3D11Device* pDevice, const std::wstring& assetFile)
 
 Effect::~Effect()
 {
-	m_pEffect->Release();
-	m_pEffect = nullptr;
+	
 
-	m_pTechnique->Release();
-	m_pTechnique = nullptr;
+	if (m_pEffect) {
+		m_pEffect->Release();
+		m_pEffect = nullptr;
+	}
+
+	if (m_pTechnique) {
+		//m_pTechnique->Release();
+		m_pTechnique = nullptr;
+	}
+	//if (m_pInputLayout) {
+	//	m_pInputLayout->Release();
+	//	m_pInputLayout = nullptr;
+	//}
 }
 
 ID3DX11Effect* Effect::LoadEffect(ID3D11Device* pDevice, const std::wstring& assetFile)
 {
+
 	HRESULT result;
 	ID3D10Blob* pErrorBlob{nullptr};
 	ID3DX11Effect* pEffect;
@@ -31,7 +44,6 @@ ID3DX11Effect* Effect::LoadEffect(ID3D11Device* pDevice, const std::wstring& ass
 	shaderFlags |= D3DCOMPILE_DEBUG;
 	shaderFlags |= D3DCOMPILE_SKIP_OPTIMIZATION;
 #endif
-
 	result = D3DX11CompileEffectFromFile(assetFile.c_str(), 
 		nullptr, 
 		nullptr, 
@@ -40,6 +52,7 @@ ID3DX11Effect* Effect::LoadEffect(ID3D11Device* pDevice, const std::wstring& ass
 		pDevice, 
 		&pEffect, 
 		&pErrorBlob);
+
 
 	if (FAILED(result))
 	{
@@ -74,9 +87,9 @@ ID3DX11EffectTechnique* Effect::GetTechnique() const
 	return m_pTechnique;
 }
 
-ID3D11InputLayout* Effect::GetInputLayout() const
-{
-	return m_pInputLayout;
-}
+//ID3D11InputLayout* Effect::GetInputLayout() const
+//{
+//	return m_pInputLayout;
+//}
 
 

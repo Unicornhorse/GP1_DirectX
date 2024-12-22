@@ -38,7 +38,7 @@ namespace dae
 		ID3D11Texture2D* m_pDepthStencilBuffer{};
 		ID3D11DepthStencilView* m_pDepthStencilView{};
 
-		ID3D11Texture2D* m_pRenderBackBuffer{};
+		ID3D11Texture2D* m_pRenderTargetBuffer{};
 		ID3D11RenderTargetView* m_pRenderTargetView{};
 
 		Mesh* m_pMesh{};

@@ -1,6 +1,7 @@
 #pragma once
 #include "Vector3.h"
 #include "Vector4.h"
+#include "vector"
 
 #include "Effect.h"
 
@@ -16,13 +17,16 @@ struct Vertex_PosCol
 class Mesh
 {
 public:
-	Mesh(ID3D11Device* pDevice, const std::vector<Vertex_PosCol>& vertices, const std::vector<uint32_t>& indices);
+	Mesh(ID3D11Device* pDevice);
 	~Mesh();
 
 	void Render(ID3D11DeviceContext* pDeviceContext) const;
 
 private:
 	void CreateLayoutAndBuffers(ID3D11Device* pDevice, const std::vector<Vertex_PosCol>& vertices, const std::vector<uint32_t>& indices);
+
+	void CreateVertexLayout(ID3D11Device* pDevice);
+	void CreateVertexBuffer(ID3D11Device* pDevice, const std::vector<Vertex_PosCol>& vertices, const std::vector<uint32_t>& indices);
     
     // DirectX resources
     ID3D11Buffer* m_pVertexBuffer{ nullptr };
@@ -35,4 +39,7 @@ private:
 
     // Buffer sizes
     uint32_t m_NumIndices{ 0 };
+
+    std::vector<uint32_t> m_Indices{};
+    std::vector<Vertex_PosCol> m_Vertices{};
 };

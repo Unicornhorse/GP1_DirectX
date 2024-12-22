@@ -19,6 +19,8 @@ namespace dae {
 		{
 			std::cout << "DirectX initialization failed!\n";
 		}
+
+		m_pMesh = new Mesh(m_pDevice);
 	}
 
 	Renderer::~Renderer()
@@ -29,7 +31,7 @@ namespace dae {
 			m_pDeviceContext->Release();
 			m_pDeviceContext = nullptr;
 		}
-		
+
 
 		if (m_pDevice) {
 			m_pDevice->Release();
@@ -51,9 +53,9 @@ namespace dae {
 			m_pDepthStencilView = nullptr;
 		}
 
-		if (m_pRenderBackBuffer) {
-			m_pRenderBackBuffer->Release();
-			m_pRenderBackBuffer = nullptr;
+		if (m_pRenderTargetBuffer) {
+			m_pRenderTargetBuffer->Release();
+			m_pRenderTargetBuffer = nullptr;
 		}
 
 		if (m_pRenderTargetView) {
@@ -61,8 +63,10 @@ namespace dae {
 			m_pRenderTargetView = nullptr;
 		}
 
-		m_pMesh = nullptr;
-		delete m_pMesh;
+		if (m_pMesh) {
+			delete m_pMesh;
+			m_pMesh = nullptr;
+		}
 	}
 
 	void Renderer::Update(const Timer* pTimer)
@@ -77,7 +81,7 @@ namespace dae {
 			return;
 
 		// 1. Clear RTV & DSV
-		constexpr float color[4]{ 0.0f, 0.0f, 0.3f, 1.0f };
+		constexpr float color[4] = { 0.0f, 0.0f, 0.3f, 1.0f };
 		m_pDeviceContext->ClearRenderTargetView(m_pRenderTargetView, color);
 		m_pDeviceContext->ClearDepthStencilView(m_pDepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
@@ -103,7 +107,7 @@ namespace dae {
 		HRESULT result = D3D11CreateDevice(
 			nullptr,
 			D3D_DRIVER_TYPE_HARDWARE,
-			nullptr,
+			0,
 			createDeviceFlags,
 			&featureLevel,
 			1,
@@ -148,7 +152,7 @@ namespace dae {
 		
 		// Get the handle (HWND) from SDL backbuffer
 		SDL_SysWMinfo sysWMInfo{};
-		SDL_VERSION(&sysWMInfo.version);
+		SDL_GetVersion(&sysWMInfo.version);
 		SDL_GetWindowWMInfo(m_pWindow, &sysWMInfo);
 		swapChainDesc.OutputWindow = sysWMInfo.info.win.window;
 
@@ -193,12 +197,12 @@ namespace dae {
 		// ================================
 
 		// Resource
-		result = m_pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), reinterpret_cast<void**>(&m_pRenderBackBuffer));
+		result = m_pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), reinterpret_cast<void**>(&m_pRenderTargetBuffer));
 		if (FAILED(result)) {
 			return result;
 		}
 
-		result = m_pDevice->CreateRenderTargetView(m_pRenderBackBuffer, nullptr, &m_pRenderTargetView);
+		result = m_pDevice->CreateRenderTargetView(m_pRenderTargetBuffer, nullptr, &m_pRenderTargetView);
 		if (FAILED(result)) {
 			return result;
 		}
