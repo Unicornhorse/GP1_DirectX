@@ -23,7 +23,7 @@ Effect::~Effect()
 	}
 
 	if (m_pTechnique) {
-		//m_pTechnique->Release();
+
 		m_pTechnique = nullptr;
 	}
 	//if (m_pInputLayout) {

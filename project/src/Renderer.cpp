@@ -19,8 +19,14 @@ namespace dae {
 		{
 			std::cout << "DirectX initialization failed!\n";
 		}
+		std::vector<uint32_t> indices{ 0, 1, 2 };
+		std::vector<Vertex_PosCol> vertices{
+				{{.0f, 3.f, 2.f}, {1.f, 0.f, 0.f}},
+				{{3.f, -3.f, 2.f}, {0.f, 0.f, 1.f}},
+				{{-3.f, -3.f, 2.f}, {0.f, 1.f, 0.f}}
+		};
 
-		m_pMesh = new Mesh(m_pDevice);
+		m_pMesh = new Mesh(m_pDevice, indices, vertices);
 	}
 
 	Renderer::~Renderer()

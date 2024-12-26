@@ -1,18 +1,23 @@
 #include "pch.h"
 #include "Mesh.h"
 
-Mesh::Mesh(ID3D11Device* pDevice) :
-	m_Indices{ 0, 1, 2 },
-	m_Vertices{
-		{{.0f, .5f, .5f}, {1.f, 0.f, 0.f}},
-		{{.5f, -.5f, .5f}, {0.f, 0.f, 1.f}},
-		{{-.5f, -.5f, .5f}, {0.f, 1.f, 0.f}}
-	},
+Mesh::Mesh(ID3D11Device* pDevice, std::vector<uint32_t> indices, std::vector<Vertex_PosCol> vertices) :
+	//m_Indices{ 0, 1, 2 },
+	////m_Vertices{
+	////	{{.0f, .5f, .5f}, {1.f, 0.f, 0.f}},
+	////	{{.5f, -.5f, .5f}, {0.f, 0.f, 1.f}},
+	////	{{-.5f, -.5f, .5f}, {0.f, 1.f, 0.f}}
+	////},
+	//m_Vertices{
+	//	{{.0f, 3.f, 2.f}, {1.f, 0.f, 0.f}},
+	//	{{3.f, -3.f, 2.f}, {0.f, 0.f, 1.f}},
+	//	{{-3.f, -3.f, 2.f}, {0.f, 1.f, 0.f}}
+	//},
 	m_pEffect{ new Effect( pDevice, L"resources/PosCol3D.fx" ) },
 	m_pTechnique{ m_pEffect->GetTechnique() }
 
 {
-	CreateLayoutAndBuffers(pDevice, m_Vertices, m_Indices);
+	CreateLayoutAndBuffers(pDevice, vertices, indices);
 }
 
 Mesh::~Mesh()
