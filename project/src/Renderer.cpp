@@ -27,6 +27,7 @@ namespace dae {
 		};
 
 		m_pMesh = new Mesh(m_pDevice, indices, vertices);
+		m_pCamera = new Camera(Vector3{ 0.f, 0.f, -10.f }, 45.f);
 	}
 
 	Renderer::~Renderer()
@@ -73,6 +74,12 @@ namespace dae {
 			delete m_pMesh;
 			m_pMesh = nullptr;
 		}
+
+		if (m_pCamera)
+		{
+			delete m_pCamera;
+			m_pCamera = nullptr;
+		}
 	}
 
 	void Renderer::Update(const Timer* pTimer)
@@ -92,6 +99,8 @@ namespace dae {
 		m_pDeviceContext->ClearDepthStencilView(m_pDepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
 		// 2. SET pipeline + invoke draw call (= render)
+		Matrix world = m_pCamera->GetProjectionMatrix() * m_pCamera->GetViewMatrix();
+
 		m_pMesh->Render(m_pDeviceContext);
 
 		// 3. Present backbuffer (swap)

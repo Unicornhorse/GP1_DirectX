@@ -9,6 +9,7 @@ public:
     
     // Getters
     ID3DX11EffectTechnique* GetTechnique() const;
+	void SetWorldMatrix(const Matrix& world) const;
     //ID3D11InputLayout* GetInputLayout() const;
 private:
     ID3DX11Effect* m_pEffect;
@@ -16,4 +17,5 @@ private:
     ID3D11InputLayout* m_pInputLayout{}; 
 
     ID3DX11Effect* LoadEffect(ID3D11Device* pDevice, const std::wstring& assetFile);
+    ID3DX11EffectMatrixVariable* m_pWorldMatrixVariable{};
 };

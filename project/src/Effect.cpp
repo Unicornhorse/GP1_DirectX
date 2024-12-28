@@ -4,12 +4,19 @@
 
 Effect::Effect(ID3D11Device* pDevice, const std::wstring& assetFile) :
 	m_pEffect{ LoadEffect(pDevice, assetFile) },
-	m_pTechnique{ nullptr }
+	m_pTechnique{ nullptr },
+	m_pWorldMatrixVariable{ nullptr }
 {
 	//m_pTechnique = m_pEffect->GetTechniqueByIndex(0);
     m_pTechnique = m_pEffect->GetTechniqueByName("DefaultTechnique");
 	if (!m_pTechnique) {
 		std::wcout << L"Technique not valid\n";
+	}
+
+	m_pWorldMatrixVariable = m_pEffect->GetVariableByName("gWorldViewProj")->AsMatrix();
+	if (!m_pWorldMatrixVariable->IsValid())
+	{
+		std::wcerr << L"gWorldViewProj variable not valid!\n";
 	}
 }
 
@@ -25,6 +32,12 @@ Effect::~Effect()
 	if (m_pTechnique) {
 
 		m_pTechnique = nullptr;
+	}
+
+	if (m_pWorldMatrixVariable)
+	{
+		m_pWorldMatrixVariable->Release();
+		m_pWorldMatrixVariable = nullptr;
 	}
 	//if (m_pInputLayout) {
 	//	m_pInputLayout->Release();
@@ -85,6 +98,11 @@ ID3DX11Effect* Effect::LoadEffect(ID3D11Device* pDevice, const std::wstring& ass
 ID3DX11EffectTechnique* Effect::GetTechnique() const
 {
 	return m_pTechnique;
+}
+
+void Effect::SetWorldMatrix(const Matrix& world) const
+{
+	m_pWorldMatrixVariable->SetMatrix(reinterpret_cast<const float*>(&world));
 }
 
 //ID3D11InputLayout* Effect::GetInputLayout() const

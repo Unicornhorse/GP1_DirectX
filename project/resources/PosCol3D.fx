@@ -1,4 +1,9 @@
 //-----------------
+// WorldViewProjection
+//-----------------
+float4x4 gWorldViewProj : WorldViewProjection;
+
+//-----------------
 // input/output structs
 //-----------------
 struct VS_INPUT
