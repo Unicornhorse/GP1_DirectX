@@ -1,9 +1,13 @@
 #include "Camera.h"
 
 Camera::Camera(const Vector3& origin, float fovAngle):
-	m_Origin(origin), 
-	m_FovAngle(fovAngle), 
-	m_Fov(tanf((fovAngle* TO_RADIANS) / 2.f))
+	m_Origin{ origin },
+	m_FovAngle{ fovAngle },
+	m_Fov{ tanf((fovAngle * TO_RADIANS) / 2.f) },
+
+	m_Forward{ Vector3::UnitZ },
+	m_Up{ Vector3::UnitY },
+	m_Right{ Vector3::UnitX }
 {
 }
 

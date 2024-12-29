@@ -19,15 +19,10 @@ namespace dae {
 		{
 			std::cout << "DirectX initialization failed!\n";
 		}
-		std::vector<uint32_t> indices{ 0, 1, 2 };
-		std::vector<Vertex_PosCol> vertices{
-				{{.0f, 3.f, 2.f}, {1.f, 0.f, 0.f}},
-				{{3.f, -3.f, 2.f}, {0.f, 0.f, 1.f}},
-				{{-3.f, -3.f, 2.f}, {0.f, 1.f, 0.f}}
-		};
 
+		m_pCamera = new Camera(Vector3{ 0.f, 0.f, -10.f }, 45.f);	
 		m_pMesh = new Mesh(m_pDevice, indices, vertices);
-		m_pCamera = new Camera(Vector3{ 0.f, 0.f, -10.f }, 45.f);
+		
 	}
 
 	Renderer::~Renderer()
@@ -99,9 +94,21 @@ namespace dae {
 		m_pDeviceContext->ClearDepthStencilView(m_pDepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
 		// 2. SET pipeline + invoke draw call (= render)
-		Matrix world = m_pCamera->GetProjectionMatrix() * m_pCamera->GetViewMatrix();
+		Matrix m_World{};
 
+		m_World *= Matrix::CreateRotation(Vector3{ 0.f, 0.f, 0.f });
+		m_World *= Matrix::CreateScale(1.f, 1.f, 1.f);
+		m_World *= Matrix::CreateTranslation(Vector3{ 0.f, 0.f, 0.f });
+
+		//m_World = Matrix::CreateRotation(Vector3{ 0.f, 0.f, 0.f }) *
+		//		  Matrix::CreateScale(1.f, 1.f, 1.f) *
+		//		  Matrix::CreateTranslation(Vector3{ 0.f, 0.f, 0.f });
+
+		Matrix wvpMatrix = m_World * m_pCamera->GetViewMatrix() * m_pCamera->GetProjectionMatrix(aspectRatio);
+
+		m_pMesh->SetMatrix(wvpMatrix);
 		m_pMesh->Render(m_pDeviceContext);
+
 
 		// 3. Present backbuffer (swap)
 		m_pSwapChain->Present(0, 0);

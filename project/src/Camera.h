@@ -1,5 +1,6 @@
 #pragma once
-#include "Math.h"
+#include "pch.h"
+#include "Matrix.h"
 
 using namespace dae;
 
@@ -14,13 +15,13 @@ public:
 	Matrix GetProjectionMatrix(float aspectRatio) const;
 
 private:
-	Vector3 m_Origin{};
-	float m_FovAngle{}; // in radians
-	float m_Fov{}; // in degrees
+	Vector3 m_Origin;
+	float m_FovAngle; // in radians
+	float m_Fov; // in degrees
 
-	Vector3 m_Forward{ Vector3::UnitZ };
-	Vector3 m_Up{ Vector3::UnitY };
-	Vector3 m_Right{ Vector3::UnitX };
+	Vector3 m_Forward;
+	Vector3 m_Up;
+	Vector3 m_Right;
 
 	Matrix m_InvViewMatrix{};
 	Matrix viewMatrix{};

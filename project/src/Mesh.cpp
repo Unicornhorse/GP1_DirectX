@@ -2,20 +2,8 @@
 #include "Mesh.h"
 
 Mesh::Mesh(ID3D11Device* pDevice, std::vector<uint32_t> indices, std::vector<Vertex_PosCol> vertices) :
-	//m_Indices{ 0, 1, 2 },
-	////m_Vertices{
-	////	{{.0f, .5f, .5f}, {1.f, 0.f, 0.f}},
-	////	{{.5f, -.5f, .5f}, {0.f, 0.f, 1.f}},
-	////	{{-.5f, -.5f, .5f}, {0.f, 1.f, 0.f}}
-	////},
-	//m_Vertices{
-	//	{{.0f, 3.f, 2.f}, {1.f, 0.f, 0.f}},
-	//	{{3.f, -3.f, 2.f}, {0.f, 0.f, 1.f}},
-	//	{{-3.f, -3.f, 2.f}, {0.f, 1.f, 0.f}}
-	//},
 	m_pEffect{ new Effect( pDevice, L"resources/PosCol3D.fx" ) },
 	m_pTechnique{ m_pEffect->GetTechnique() }
-
 {
 	CreateLayoutAndBuffers(pDevice, vertices, indices);
 }
@@ -46,6 +34,8 @@ Mesh::~Mesh()
 
 void Mesh::Render(ID3D11DeviceContext* pDeviceContext) const
 {
+	
+
 	// 1. Set Primitive topology
 	pDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
@@ -68,6 +58,11 @@ void Mesh::Render(ID3D11DeviceContext* pDeviceContext) const
 		m_pEffect->GetTechnique()->GetPassByIndex(p)->Apply(0, pDeviceContext);
 		pDeviceContext->DrawIndexed(m_NumIndices, 0, 0);
 	}
+}
+
+void Mesh::SetMatrix(const Matrix& wvpMatrix) const
+{
+	m_pEffect->SetMatrix(wvpMatrix);
 }
 
 void Mesh::CreateLayoutAndBuffers(ID3D11Device* pDevice, const std::vector<Vertex_PosCol>& vertices, const std::vector<uint32_t>& indices)

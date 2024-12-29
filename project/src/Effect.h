@@ -9,7 +9,7 @@ public:
     
     // Getters
     ID3DX11EffectTechnique* GetTechnique() const;
-	void SetWorldMatrix(const Matrix& world) const;
+	void SetMatrix(const Matrix& world) const;
     //ID3D11InputLayout* GetInputLayout() const;
 private:
     ID3DX11Effect* m_pEffect;

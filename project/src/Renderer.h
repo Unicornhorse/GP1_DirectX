@@ -1,6 +1,7 @@
 #pragma once
 #include "Mesh.h"
 #include "Camera.h"
+#include "Matrix.h"
 
 struct SDL_Window;
 struct SDL_Surface;
@@ -44,5 +45,15 @@ namespace dae
 
 		Mesh* m_pMesh{};
 		Camera* m_pCamera{};
+
+		std::vector<uint32_t> indices{ 0, 1, 2 };
+		std::vector<Vertex_PosCol> vertices{
+				{{.0f, 3.f, 2.f}, {1.f, 0.f, 0.f}},
+				{{3.f, -3.f, 2.f}, {0.f, 0.f, 1.f}},
+				{{-3.f, -3.f, 2.f}, {0.f, 1.f, 0.f}}
+		};
+
+		const float aspectRatio = static_cast<float>(m_Width) / static_cast<float>(m_Height);
+		
 	};
 }

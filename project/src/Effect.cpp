@@ -16,7 +16,7 @@ Effect::Effect(ID3D11Device* pDevice, const std::wstring& assetFile) :
 	m_pWorldMatrixVariable = m_pEffect->GetVariableByName("gWorldViewProj")->AsMatrix();
 	if (!m_pWorldMatrixVariable->IsValid())
 	{
-		std::wcerr << L"gWorldViewProj variable not valid!\n";
+		std::wcout << L"gWorldViewProj variable not valid!\n";
 	}
 }
 
@@ -36,7 +36,7 @@ Effect::~Effect()
 
 	if (m_pWorldMatrixVariable)
 	{
-		m_pWorldMatrixVariable->Release();
+		//m_pWorldMatrixVariable->Release();
 		m_pWorldMatrixVariable = nullptr;
 	}
 	//if (m_pInputLayout) {
@@ -100,9 +100,11 @@ ID3DX11EffectTechnique* Effect::GetTechnique() const
 	return m_pTechnique;
 }
 
-void Effect::SetWorldMatrix(const Matrix& world) const
+void Effect::SetMatrix(const Matrix& wvpMatrix) const
 {
-	m_pWorldMatrixVariable->SetMatrix(reinterpret_cast<const float*>(&world));
+
+
+	m_pWorldMatrixVariable->SetMatrix(reinterpret_cast<const float*>(&wvpMatrix));
 }
 
 //ID3D11InputLayout* Effect::GetInputLayout() const

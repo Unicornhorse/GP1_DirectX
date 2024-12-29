@@ -3,6 +3,7 @@
 #include "Vector4.h"
 #include "vector"
 
+#include "Matrix.h"
 #include "Effect.h"
 
 
@@ -17,10 +18,11 @@ struct Vertex_PosCol
 class Mesh
 {
 public:
-	Mesh(ID3D11Device* pDevice, std::vector<uint32_t> indices, std::vector<Vertex_PosCol> vertices);
+    Mesh(ID3D11Device* pDevice, std::vector<uint32_t> indices, std::vector<Vertex_PosCol> vertices);
 	~Mesh();
 
 	void Render(ID3D11DeviceContext* pDeviceContext) const;
+	void SetMatrix(const Matrix& wvpMatrix) const;
 
 private:
 	void CreateLayoutAndBuffers(ID3D11Device* pDevice, const std::vector<Vertex_PosCol>& vertices, const std::vector<uint32_t>& indices);
