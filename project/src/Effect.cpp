@@ -36,7 +36,6 @@ Effect::~Effect()
 
 	if (m_pWorldMatrixVariable)
 	{
-		//m_pWorldMatrixVariable->Release();
 		m_pWorldMatrixVariable = nullptr;
 	}
 	//if (m_pInputLayout) {
@@ -102,8 +101,6 @@ ID3DX11EffectTechnique* Effect::GetTechnique() const
 
 void Effect::SetMatrix(const Matrix& wvpMatrix) const
 {
-
-
 	m_pWorldMatrixVariable->SetMatrix(reinterpret_cast<const float*>(&wvpMatrix));
 }
 

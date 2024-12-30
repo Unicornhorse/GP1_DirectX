@@ -22,7 +22,7 @@ namespace dae {
 
 		m_pCamera = new Camera(Vector3{ 0.f, 0.f, -10.f }, 45.f);	
 		m_pMesh = new Mesh(m_pDevice, indices, vertices);
-		
+		m_AspectRatio = static_cast<float>(m_Width) / static_cast<float>(m_Height);
 	}
 
 	Renderer::~Renderer()
@@ -75,6 +75,12 @@ namespace dae {
 			delete m_pCamera;
 			m_pCamera = nullptr;
 		}
+
+		if (m_pTexture)
+		{
+			delete m_pTexture;
+			m_pTexture = nullptr;
+		}
 	}
 
 	void Renderer::Update(const Timer* pTimer)
@@ -100,11 +106,8 @@ namespace dae {
 		m_World *= Matrix::CreateScale(1.f, 1.f, 1.f);
 		m_World *= Matrix::CreateTranslation(Vector3{ 0.f, 0.f, 0.f });
 
-		//m_World = Matrix::CreateRotation(Vector3{ 0.f, 0.f, 0.f }) *
-		//		  Matrix::CreateScale(1.f, 1.f, 1.f) *
-		//		  Matrix::CreateTranslation(Vector3{ 0.f, 0.f, 0.f });
 
-		Matrix wvpMatrix = m_World * m_pCamera->GetViewMatrix() * m_pCamera->GetProjectionMatrix(aspectRatio);
+		Matrix wvpMatrix = m_World * m_pCamera->GetViewMatrix() * m_pCamera->GetProjectionMatrix(m_AspectRatio);
 
 		m_pMesh->SetMatrix(wvpMatrix);
 		m_pMesh->Render(m_pDeviceContext);
@@ -244,7 +247,6 @@ namespace dae {
 		viewport.MaxDepth = 1.f;
 		m_pDeviceContext->RSSetViewports(1, &viewport);
 
-		//return S_FALSE;
 		return result;
 	}
 }

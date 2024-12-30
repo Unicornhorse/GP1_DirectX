@@ -13,6 +13,7 @@ struct Vertex_PosCol
 {
 	Vector3 position{};
 	ColorRGB color{ colors::White };
+	Vector2 uv{};
 };
 
 class Mesh
