@@ -8,6 +8,15 @@ namespace dae {
 	{
 		//Initialize
 		SDL_GetWindowSize(pWindow, &m_Width, &m_Height);
+
+		// Get aspect ratio
+		m_AspectRatio = static_cast<float>(m_Width) / static_cast<float>(m_Height);
+
+		// Camera 
+		m_Camera.Initialize(45.f, { .0f,.0f, -10.f });
+		m_Camera.CalculateProjectionMatrix(m_AspectRatio);
+		
+
 		//Initialize DirectX pipeline
 		const HRESULT result = InitializeDirectX();
 		if (result == S_OK)
@@ -18,11 +27,14 @@ namespace dae {
 		else
 		{
 			std::cout << "DirectX initialization failed!\n";
-		}
+		}		
 
-		m_pCamera = new Camera(Vector3{ 0.f, 0.f, -10.f }, 45.f);	
+		// Mesh
 		m_pMesh = new Mesh(m_pDevice, indices, vertices);
-		m_AspectRatio = static_cast<float>(m_Width) / static_cast<float>(m_Height);
+
+		// Textures
+		m_pTexture = Texture::LoadFromFile("resources/uv_grid_2.png", m_pDevice);
+		m_pMesh->SetDiffuseMap(m_pTexture);
 	}
 
 	Renderer::~Renderer()
@@ -70,12 +82,6 @@ namespace dae {
 			m_pMesh = nullptr;
 		}
 
-		if (m_pCamera)
-		{
-			delete m_pCamera;
-			m_pCamera = nullptr;
-		}
-
 		if (m_pTexture)
 		{
 			delete m_pTexture;
@@ -85,7 +91,7 @@ namespace dae {
 
 	void Renderer::Update(const Timer* pTimer)
 	{
-
+		m_Camera.Update(pTimer);
 	}
 
 
@@ -107,7 +113,7 @@ namespace dae {
 		m_World *= Matrix::CreateTranslation(Vector3{ 0.f, 0.f, 0.f });
 
 
-		Matrix wvpMatrix = m_World * m_pCamera->GetViewMatrix() * m_pCamera->GetProjectionMatrix(m_AspectRatio);
+		Matrix wvpMatrix = m_World * m_Camera.GetViewMatrix() * m_Camera.GetProjectionMatrix();
 
 		m_pMesh->SetMatrix(wvpMatrix);
 		m_pMesh->Render(m_pDeviceContext);

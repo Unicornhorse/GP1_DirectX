@@ -1,10 +1,11 @@
 #include "Texture.h"
 #include <SDL_image.h>
 
-dae::Texture::Texture():
-	m_pResource(nullptr),
-	m_pSRV(nullptr)
+dae::Texture::Texture(SDL_Surface* pSurface, ID3D11Device* pDevice):
+	m_pSurface{ pSurface }, 
+	m_pSurfacePixels{ (uint32_t*)pSurface->pixels }
 {
+	Load(pSurface, pDevice);
 }
 
 dae::Texture::~Texture()
@@ -21,10 +22,14 @@ dae::Texture::~Texture()
 	}
 }
 
-bool dae::Texture::Load(const std::string& path, ID3D11Device* pDevice)
+dae::Texture* dae::Texture::LoadFromFile(const std::string& path, ID3D11Device* pDevice)
 {
-	SDL_Surface* pSurface = IMG_Load(path.c_str());
+	return new Texture{ IMG_Load(path.c_str()), pDevice };
+}
 
+
+void dae::Texture::Load(const SDL_Surface* pSurface, ID3D11Device* pDevice)
+{
 	DXGI_FORMAT format = DXGI_FORMAT_R8G8B8A8_UNORM;
 	D3D11_TEXTURE2D_DESC desc{};
 	desc.Width = pSurface->w;
@@ -49,7 +54,7 @@ bool dae::Texture::Load(const std::string& path, ID3D11Device* pDevice)
 	D3D11_SHADER_RESOURCE_VIEW_DESC SRVDesc{};
 	SRVDesc.Format = format;
 	SRVDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
-	SRVDesc.Texture2D.MostDetailedMip = 1;
+	SRVDesc.Texture2D.MipLevels = 1;
 
 	hr = pDevice->CreateShaderResourceView(m_pResource, &SRVDesc, &m_pSRV);
 }

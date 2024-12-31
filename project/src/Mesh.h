@@ -24,6 +24,7 @@ public:
 
 	void Render(ID3D11DeviceContext* pDeviceContext) const;
 	void SetMatrix(const Matrix& wvpMatrix) const;
+    void SetDiffuseMap(Texture* texture) const;
 
 private:
 	void CreateLayoutAndBuffers(ID3D11Device* pDevice, const std::vector<Vertex_PosCol>& vertices, const std::vector<uint32_t>& indices);

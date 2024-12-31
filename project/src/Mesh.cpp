@@ -30,6 +30,8 @@ Mesh::~Mesh()
 		delete m_pEffect;
 		m_pEffect = nullptr;
 	}
+
+	
 }
 
 void Mesh::Render(ID3D11DeviceContext* pDeviceContext) const
@@ -65,6 +67,11 @@ void Mesh::SetMatrix(const Matrix& wvpMatrix) const
 	m_pEffect->SetMatrix(wvpMatrix);
 }
 
+void Mesh::SetDiffuseMap(Texture* texture) const
+{
+	m_pEffect->SetDiffuseMap(texture);
+}
+
 void Mesh::CreateLayoutAndBuffers(ID3D11Device* pDevice, const std::vector<Vertex_PosCol>& vertices, const std::vector<uint32_t>& indices)
 {
 	CreateVertexLayout(pDevice);
@@ -87,7 +94,7 @@ void Mesh::CreateVertexLayout(ID3D11Device* pDevice)
 	vertexDesc[1].AlignedByteOffset = 12;
 	vertexDesc[1].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
 
-	vertexDesc[2].SemanticName = "UV";
+	vertexDesc[2].SemanticName = "TEXCOORD";
 	vertexDesc[2].Format = DXGI_FORMAT_R32G32_FLOAT;
 	vertexDesc[2].AlignedByteOffset = 24;
 	vertexDesc[2].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
