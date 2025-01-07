@@ -14,6 +14,8 @@ struct Vertex_PosCol
 	Vector3 position{};
 	ColorRGB color{ colors::White };
 	Vector2 uv{};
+	Vector3 normal{};
+	Vector3 tangent{};
 };
 
 class Mesh

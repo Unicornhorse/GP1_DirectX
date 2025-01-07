@@ -64,10 +64,10 @@ namespace dae
 			//{ { 0.f,	-3.f,	-2.f }, {colors::White}, { .5,	1	} },
 			//{ { 3.f,	-3.f,	-2.f }, {colors::White}, {	1,	1	} }
 
-			{ { -3.f,  3.f, -2.f }, { colors::White }, { 0.f, 0.f } },
-			{ {  3.f,  3.f, -2.f }, { colors::White }, { 1.f, 0.f } },
-			{ { -3.f, -3.f, -2.f }, { colors::White }, { 0.f, 1.f } },
-			{ {  3.f, -3.f, -2.f }, { colors::White }, { 1.f, 1.f } },
+			//{ { -3.f,  3.f, -2.f }, { colors::White }, { 0.f, 0.f } },
+			//{ {  3.f,  3.f, -2.f }, { colors::White }, { 1.f, 0.f } },
+			//{ { -3.f, -3.f, -2.f }, { colors::White }, { 0.f, 1.f } },
+			//{ {  3.f, -3.f, -2.f }, { colors::White }, { 1.f, 1.f } },
 		};
 
 		std::vector<uint32_t> indices{ 
@@ -77,9 +77,13 @@ namespace dae
 			//2, 5, 4,	6, 3, 4,	4, 7, 6,
 			//7, 4, 5,	5, 8, 7
 
-			0, 1, 2,
-			2, 1, 3
+			//0, 1, 2,
+			//2, 1, 3
 		};
+
+		float m_Rotationspeed{ 0.9 };
+		float m_Rotation{};
+
 		Texture* m_pTexture{};
 		float m_AspectRatio;
 		

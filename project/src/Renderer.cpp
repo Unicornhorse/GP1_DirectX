@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "Renderer.h"
+#include "Utils.h"
 
 namespace dae {
 
@@ -13,7 +14,7 @@ namespace dae {
 		m_AspectRatio = static_cast<float>(m_Width) / static_cast<float>(m_Height);
 
 		// Camera 
-		m_Camera.Initialize(45.f, { .0f,.0f, -10.f });
+		m_Camera.Initialize(45.f, { .0f,.0f, -50.f });
 		m_Camera.CalculateProjectionMatrix(m_AspectRatio);
 		
 
@@ -30,10 +31,12 @@ namespace dae {
 		}		
 
 		// Mesh
+		Utils::ParseOBJ("resources/vehicle.obj", vertices, indices);
 		m_pMesh = new Mesh(m_pDevice, indices, vertices);
 
 		// Textures
-		m_pTexture = Texture::LoadFromFile("resources/uv_grid_2.png", m_pDevice);
+		//m_pTexture = Texture::LoadFromFile("resources/uv_grid_2.png", m_pDevice);
+		m_pTexture = Texture::LoadFromFile("resources/vehicle_diffuse.png", m_pDevice);
 		m_pMesh->SetDiffuseMap(m_pTexture);
 	}
 
@@ -92,6 +95,8 @@ namespace dae {
 	void Renderer::Update(const Timer* pTimer)
 	{
 		m_Camera.Update(pTimer);
+
+		m_Rotation += m_Rotationspeed * pTimer->GetElapsed();
 	}
 
 
@@ -103,12 +108,11 @@ namespace dae {
 		// 1. Clear RTV & DSV
 		constexpr float color[4] = { 0.0f, 0.0f, 0.3f, 1.0f };
 		m_pDeviceContext->ClearRenderTargetView(m_pRenderTargetView, color);
-		m_pDeviceContext->ClearDepthStencilView(m_pDepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+		m_pDeviceContext->ClearDepthStencilView(m_pDepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.f, 0);
 
 		// 2. SET pipeline + invoke draw call (= render)
 		Matrix m_World{};
-
-		m_World *= Matrix::CreateRotation(Vector3{ 0.f, 0.f, 0.f });
+		m_World *= Matrix::CreateRotation(Vector3{ 0.f, m_Rotation, 0.f });
 		m_World *= Matrix::CreateScale(1.f, 1.f, 1.f);
 		m_World *= Matrix::CreateTranslation(Vector3{ 0.f, 0.f, 0.f });
 
