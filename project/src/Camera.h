@@ -2,7 +2,6 @@
 #include "pch.h"
 
 namespace dae {
-	struct Matrix;
 	struct Camera {
 
 		Camera() = default;
@@ -96,6 +95,8 @@ namespace dae {
 
 
 			//Mouse Input
+			const float mouseSensitivity = 0.05f;
+
 			int mouseX{}, mouseY{};
 			const uint32_t mouseState = SDL_GetRelativeMouseState(&mouseX, &mouseY);
 
@@ -119,27 +120,27 @@ namespace dae {
 
 			if (mouseState & SDL_BUTTON(SDL_BUTTON_LEFT) && mouseState & SDL_BUTTON(SDL_BUTTON_RIGHT)) {
 				if (mouseY > 0) {
-					origin -= up * movement * deltaTime;
+					origin -= up * mouseSensitivity;
 				}
 				else if (mouseY < 0) {
-					origin += up * movement * deltaTime;
+					origin += up * mouseSensitivity;
 				}
 			}
 			else if (mouseState & SDL_BUTTON(SDL_BUTTON_LEFT)) {
 				if (mouseY != 0 || mouseX != 0) {
 					if (mouseY > 0) {
-						origin -= forward * speed * deltaTime;
+						origin -= forward * mouseSensitivity;
 					}
 					else if (mouseY < 0) {
-						origin += forward * speed * deltaTime;
+						origin += forward * mouseSensitivity;
 					}
-					totalYaw += mouseX * deltaTime;
+					totalYaw += mouseX * mouseSensitivity;
 				}
 			}
 			else if (mouseState & SDL_BUTTON(SDL_BUTTON_RIGHT)) {
 				if (mouseX != 0 || mouseY != 0) {
-					totalPitch += mouseY * deltaTime;
-					totalYaw += mouseX * deltaTime;
+					totalPitch += mouseY * mouseSensitivity;
+					totalYaw += mouseX * mouseSensitivity;
 				}
 			}
 

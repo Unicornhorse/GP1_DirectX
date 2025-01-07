@@ -14,6 +14,8 @@ public:
     ID3DX11EffectTechnique* GetTechnique() const;
 	void SetMatrix(const Matrix& world) const;
 	void SetDiffuseMap(Texture* texture) const;
+
+    void ToggleTechnique();
     //ID3D11InputLayout* GetInputLayout() const;
 private:
     ID3DX11Effect* m_pEffect;
@@ -22,6 +24,8 @@ private:
 
     ID3DX11EffectMatrixVariable* m_pWorldMatrixVariable{};
 	ID3DX11EffectShaderResourceVariable* m_pDiffuseMapVariable{};
+
+	int m_TechniqueIdx{ 0 };
 
     // private functions 
     ID3DX11Effect* LoadEffect(ID3D11Device* pDevice, const std::wstring& assetFile);

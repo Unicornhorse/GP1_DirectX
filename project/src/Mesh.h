@@ -26,6 +26,8 @@ public:
 	void SetMatrix(const Matrix& wvpMatrix) const;
     void SetDiffuseMap(Texture* texture) const;
 
+    void ToggleTechnique();
+
 private:
 	void CreateLayoutAndBuffers(ID3D11Device* pDevice, const std::vector<Vertex_PosCol>& vertices, const std::vector<uint32_t>& indices);
 

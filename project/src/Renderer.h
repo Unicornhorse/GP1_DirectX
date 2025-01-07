@@ -23,6 +23,8 @@ namespace dae
 		void Update(const Timer* pTimer);
 		void Render() const;
 
+		void ToggleTechnique();
+
 	private:
 		SDL_Window* m_pWindow{};
 

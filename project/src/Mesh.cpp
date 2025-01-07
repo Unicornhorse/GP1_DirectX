@@ -72,6 +72,11 @@ void Mesh::SetDiffuseMap(Texture* texture) const
 	m_pEffect->SetDiffuseMap(texture);
 }
 
+void Mesh::ToggleTechnique()
+{
+	m_pEffect->ToggleTechnique();
+}
+
 void Mesh::CreateLayoutAndBuffers(ID3D11Device* pDevice, const std::vector<Vertex_PosCol>& vertices, const std::vector<uint32_t>& indices)
 {
 	CreateVertexLayout(pDevice);

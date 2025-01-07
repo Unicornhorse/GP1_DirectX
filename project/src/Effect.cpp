@@ -1,6 +1,7 @@
 #pragma once
 #include "pch.h"
 #include "Effect.h"
+#include "iostream"
 
 Effect::Effect(ID3D11Device* pDevice, const std::wstring& assetFile) :
 	m_pEffect{ LoadEffect(pDevice, assetFile) },
@@ -8,7 +9,7 @@ Effect::Effect(ID3D11Device* pDevice, const std::wstring& assetFile) :
 	m_pWorldMatrixVariable{ nullptr }
 {
 	//m_pTechnique = m_pEffect->GetTechniqueByIndex(0);
-    m_pTechnique = m_pEffect->GetTechniqueByName("DefaultTechnique");
+    m_pTechnique = m_pEffect->GetTechniqueByName("PointTechnique");
 	if (!m_pTechnique) {
 		std::wcout << L"Technique not valid\n";
 	}
@@ -120,6 +121,32 @@ void Effect::SetDiffuseMap(Texture* texture) const
 	if (texture)
 	{
 		m_pDiffuseMapVariable->SetResource(texture->GetShaderResourceView());
+	}
+}
+
+void Effect::ToggleTechnique()
+{
+
+	// 3 techniques in the effect file
+	// ---------------------------------
+	// 0 -> PointTechnique
+	// 1 -> LinearTechnique
+	// 2 -> AnisotropicTechnique
+	std::string techniqueName;
+	m_TechniqueIdx = (m_TechniqueIdx + 1) % 3;
+	if (m_TechniqueIdx == 0) {
+		techniqueName = "PointTechnique";
+	}
+	else if (m_TechniqueIdx == 1) {
+		techniqueName = "LinearTechnique";
+	}
+	else {
+		techniqueName = "AnisotropicTechnique";
+	}
+	std::cout << "Technique: " << techniqueName << std::endl;
+	m_pTechnique = m_pEffect->GetTechniqueByIndex(m_TechniqueIdx);
+	if (!m_pTechnique) {
+		std::wcout << L"Technique not valid\n";
 	}
 }
 

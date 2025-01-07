@@ -124,6 +124,7 @@ namespace dae {
 
 	}
 
+
 	HRESULT Renderer::InitializeDirectX()
 	{
 		// 1. Create Device and Devicecontext
@@ -254,5 +255,13 @@ namespace dae {
 		m_pDeviceContext->RSSetViewports(1, &viewport);
 
 		return result;
+	}
+
+	// -------------------
+	// Key input functions
+	// -------------------
+	void Renderer::ToggleTechnique()
+	{
+		m_pMesh->ToggleTechnique();
 	}
 }
