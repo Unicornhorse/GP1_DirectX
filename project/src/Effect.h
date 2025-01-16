@@ -12,11 +12,13 @@ public:
     
     // Getters
     ID3DX11EffectTechnique* GetTechnique() const;
+    //ID3D11InputLayout* GetInputLayout() const;
+
 	void SetMatrix(const Matrix& world) const;
 	void SetDiffuseMap(Texture* texture) const;
 
     void ToggleTechnique();
-    //ID3D11InputLayout* GetInputLayout() const;
+    
 private:
     ID3DX11Effect* m_pEffect;
     ID3DX11EffectTechnique* m_pTechnique{};

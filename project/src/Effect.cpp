@@ -126,12 +126,12 @@ void Effect::SetDiffuseMap(Texture* texture) const
 
 void Effect::ToggleTechnique()
 {
-
 	// 3 techniques in the effect file
 	// ---------------------------------
 	// 0 -> PointTechnique
 	// 1 -> LinearTechnique
 	// 2 -> AnisotropicTechnique
+
 	std::string techniqueName;
 	m_TechniqueIdx = (m_TechniqueIdx + 1) % 3;
 	if (m_TechniqueIdx == 0) {
@@ -150,9 +150,9 @@ void Effect::ToggleTechnique()
 	}
 }
 
-//ID3D11InputLayout* Effect::GetInputLayout() const
-//{
+//D3D11InputLayout* Effect::GetInputLayout() const
+//
 //	return m_pInputLayout;
-//}
+//
 
 
