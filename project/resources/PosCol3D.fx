@@ -61,7 +61,6 @@ SamplerState samAnisotropic
 struct VS_INPUT
 {
     float3 Position : POSITION;
-    float4 WorldPosition : WORLD;
     float3 Color : COLOR;
     float2 TexCoord : TEXCOORD;
     float3 Normal : NORMAL;
@@ -71,7 +70,6 @@ struct VS_INPUT
 struct VS_OUTPUT
 {
     float4 Position : SV_POSITION;
-    float4 WorldPosition : WORLD;
     float3 Color : COLOR;
     float2 TexCoord : TEXCOORD;
     float3 Normal : NORMAL;
@@ -83,7 +81,7 @@ struct VS_OUTPUT
 //-----------------
 VS_OUTPUT VS(VS_INPUT input)
 {
-    VS_OUTPUT output = (VS_OUTPUT)0;
+    VS_OUTPUT output = (VS_OUTPUT) 0;
     output.Position = mul(float4(input.Position, 1.f), gWorldViewProj);
     output.Color = input.Color;
     output.TexCoord = input.TexCoord;
@@ -116,9 +114,9 @@ technique11 PointTechnique
 {
     pass P0
     {
-        SetVertexShader( CompileShader( vs_5_0, VS() ) );
-        SetGeometryShader( NULL );
-        SetPixelShader( CompileShader( ps_5_0, PSPoint() ) );
+        SetVertexShader(CompileShader(vs_5_0, VS()));
+        SetGeometryShader(NULL);
+        SetPixelShader(CompileShader(ps_5_0, PSPoint()));
     }
 }
 technique11 LinearTechnique
